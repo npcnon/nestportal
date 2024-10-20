@@ -1,6 +1,6 @@
 
 #GET
-GET https://nestportal.onrender.com/campus
+GET http://localhost:3000/department/
 
 ### POST campus
 POST https://nestportal.onrender.com/campus
