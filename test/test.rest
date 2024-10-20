@@ -1,0 +1,12 @@
+
+#GET
+GET http://localhost:3000/campus
+
+### POST campus
+POST http://localhost:3000/campus
+Content-Type: application/json
+
+{
+    "name": "qwerty",
+    "address": "qwerty address"
+}

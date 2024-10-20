@@ -1,0 +1,299 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model EmailVerification {
+  id                Int      @id @default(autoincrement())
+  email             String   @unique
+  verification_code String
+  is_verified       Boolean  @default(false)
+  created_at        DateTime @default(now())
+  expires_at        DateTime
+}
+
+model Campus {
+  id         Int          @id
+  name       String
+  address    String
+  is_active  Boolean      @default(true)
+  is_deleted Boolean      @default(false)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  departments Department[]
+  employees   Employee[]
+  semesters   Semester[]
+
+  StudentBasicInfo StudentBasicInfo[]
+
+  StudentOfficialInfo StudentOfficialInfo[]
+}
+
+model Department {
+  id         Int       @id
+  name       String
+  campus     Campus    @relation(fields: [campus_id], references: [id])
+  campus_id  Int
+  code       String
+  is_active  Boolean   @default(true)
+  is_deleted Boolean   @default(false)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  programs   Program[]
+  employees  Employee[]
+
+  @@unique([name, campus_id, code])
+}
+
+model Program {
+  id            Int         @id
+  code          String
+  description   String
+  department    Department  @relation(fields: [department_id], references: [id])
+  department_id Int
+  is_active     Boolean     @default(true)
+  is_deleted    Boolean     @default(false)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  classes       Class[]
+  students      StudentBasicInfo[]
+
+  @@unique([description, department_id])
+  StudentAcademicBackground StudentAcademicBackground[]
+}
+
+model Employee {
+  id              Int         @id @default(autoincrement())
+  campus          Campus      @relation(fields: [campus_id], references: [id])
+  campus_id       Int
+  department      Department  @relation(fields: [department_id], references: [id])
+  department_id   Int
+  role            String
+  title           String?
+  first_name      String
+  middle_name     String?
+  last_name       String
+  qualifications  Json?
+  gender          String
+  address         String
+  birth_date      DateTime
+  contact_number  String
+  is_active       Boolean     @default(true)
+  is_deleted      Boolean     @default(false)
+  created_at      DateTime    @default(now())
+  updated_at      DateTime    @updatedAt
+  classes         Class[]
+}
+
+model Semester {
+  id            Int      @id
+  campus        Campus   @relation(fields: [campus_id], references: [id])
+  campus_id     Int
+  semester_name String
+  school_year   String
+  is_active     Boolean  @default(true)
+  is_deleted    Boolean  @default(false)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  classes       Class[]
+
+  StudentAcademicBackground StudentAcademicBackground[]
+}
+
+model Class {
+  id         Int       @id @default(autoincrement())
+  name       String
+  program    Program   @relation(fields: [program_id], references: [id])
+  program_id Int
+  semester   Semester  @relation(fields: [semester_id], references: [id])
+  semester_id Int
+  employee   Employee  @relation(fields: [employee_id], references: [id])
+  employee_id Int
+  schedule   String
+  is_active  Boolean   @default(true)
+  is_deleted Boolean   @default(false)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+}
+
+model StudentBasicInfo {
+  basicdata_applicant_id Int      @id @default(autoincrement())
+  first_name             String
+  middle_name            String?
+  last_name              String
+  suffix                 String?
+  is_transferee          Boolean
+  year_level             String
+  contact_number         String
+  address                String
+  campus                 Campus   @relation(fields: [campus_id], references: [id])
+  campus_id              Int
+  program                Program  @relation(fields: [program_id], references: [id])
+  program_id             Int
+  birth_date             DateTime
+  sex                    String
+  email                  String   @unique
+  is_active              Boolean  @default(true)
+  is_deleted             Boolean  @default(false)
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt
+  personal_data          StudentPersonalData?
+}
+
+model BugReport {
+  report_id   Int      @id @default(autoincrement())
+  report_data String
+  is_active   Boolean  @default(true)
+  is_deleted  Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model StudentPersonalData {
+  fulldata_applicant_id Int                       @id @default(autoincrement())
+  basicdata             StudentBasicInfo          @relation(fields: [basicdata_applicant_id], references: [basicdata_applicant_id])
+  basicdata_applicant_id Int                      @unique
+  f_name                String
+  m_name                String?
+  suffix                String?
+  l_name                String
+  sex                   String
+  birth_date            DateTime
+  birth_place           String
+  marital_status        String
+  religion              String
+  country               String
+  email                 String
+  acr                   String?
+  status                String
+  is_active             Boolean                   @default(true)
+  is_deleted            Boolean                   @default(false)
+  created_at            DateTime                  @default(now())
+  updated_at            DateTime                  @updatedAt
+  additional_data       StudentAddPersonalData[]
+  family_background     StudentFamilyBackground?
+  academic_background   StudentAcademicBackground?
+  academic_history      StudentAcademicHistory?
+  official_info         StudentOfficialInfo?
+
+  @@unique([f_name, m_name, suffix, l_name, sex, birth_date, birth_place, marital_status, religion, country, email, acr, status])
+}
+
+model StudentOfficialInfo {
+  id                     Int                 @id @default(autoincrement())
+  student_personal_data  StudentPersonalData @relation(fields: [fulldata_applicant_id], references: [fulldata_applicant_id])
+  fulldata_applicant_id  Int                 @unique
+  student_id             String
+  campus                 Campus              @relation(fields: [campus_id], references: [id])
+  campus_id              Int
+  password               String?
+  is_active              Boolean             @default(true)
+  is_deleted             Boolean             @default(false)
+  created_at             DateTime            @default(now())
+  updated_at             DateTime            @updatedAt
+
+  @@unique([campus_id, student_id])
+}
+
+model StudentAddPersonalData {
+  id                     Int                 @id @default(autoincrement())
+  student_personal_data  StudentPersonalData @relation(fields: [fulldata_applicant_id], references: [fulldata_applicant_id])
+  fulldata_applicant_id  Int
+  city_address           String
+  province_address       String?
+  contact_number         String
+  city_contact_number    String?
+  province_contact_number String?
+  citizenship            String
+  is_active              Boolean             @default(true)
+  is_deleted             Boolean             @default(false)
+  created_at             DateTime            @default(now())
+  updated_at             DateTime            @updatedAt
+}
+
+model StudentFamilyBackground {
+  id                     Int                 @id @default(autoincrement())
+  student_personal_data  StudentPersonalData @relation(fields: [fulldata_applicant_id], references: [fulldata_applicant_id])
+  fulldata_applicant_id  Int                 @unique
+  father_fname           String?
+  father_mname           String?
+  father_lname           String?
+  father_contact_number  String?
+  father_email           String?
+  father_occupation      String?
+  father_income          Int?
+  father_company         String?
+  mother_fname           String?
+  mother_mname           String?
+  mother_lname           String?
+  mother_contact_number  String?
+  mother_email           String?
+  mother_occupation      String?
+  mother_income          String?
+  mother_company         String?
+  guardian_fname         String?
+  guardian_mname         String?
+  guardian_lname         String?
+  guardian_relation      String?
+  guardian_contact_number String?
+  guardian_email         String?
+  is_active              Boolean             @default(true)
+  is_deleted             Boolean             @default(false)
+  created_at             DateTime            @default(now())
+  updated_at             DateTime            @updatedAt
+}
+
+model StudentAcademicBackground {
+  id                     Int                 @id @default(autoincrement())
+  student_personal_data  StudentPersonalData @relation(fields: [fulldata_applicant_id], references: [fulldata_applicant_id])
+  fulldata_applicant_id  Int                 @unique
+  program                Program             @relation(fields: [program_id], references: [id])
+  program_id             Int
+  major_in               String?
+  student_type           String
+  semester               Semester            @relation(fields: [semester_id], references: [id])
+  semester_id            Int
+  year_entry             Int
+  year_level             String
+  year_graduate          Int
+  application_type       String
+  is_active              Boolean             @default(true)
+  is_deleted             Boolean             @default(false)
+  created_at             DateTime            @default(now())
+  updated_at             DateTime            @updatedAt
+}
+
+model StudentAcademicHistory {
+  id                     Int                 @id @default(autoincrement())
+  student_personal_data  StudentPersonalData @relation(fields: [fulldata_applicant_id], references: [fulldata_applicant_id])
+  fulldata_applicant_id  Int                 @unique
+  elementary_school      String              @default("Not Provided")
+  elementary_address     String              @default("Not Provided")
+  elementary_honors      String?             @default("None")
+  elementary_graduate    Int?
+  junior_highschool      String              @default("Not Provided")
+  junior_address         String              @default("Not Provided")
+  junior_honors          String?             @default("None")
+  junior_graduate        Int?
+  senior_highschool      String              @default("Not Provided")
+  senior_address         String              @default("Not Provided")
+  senior_honors          String?             @default("None")
+  senior_graduate        Int?
+  ncae_grade             String?             @default("Unknown")
+  ncae_year_taken        Int?
+  latest_college         String?             @default("Not Provided")
+  college_address        String?             @default("Not Provided")
+  college_honors         String?             @default("None")
+  program                String?             @default("Not Specified")
+  is_active              Boolean             @default(true)
+  is_deleted             Boolean             @default(false)
+  created_at             DateTime            @default(now())
+  updated_at             DateTime            @updatedAt
+}
