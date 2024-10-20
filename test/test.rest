@@ -1,12 +1,13 @@
 
 #GET
-GET http://localhost:3000/campus
+GET https://nestportal.onrender.com/campus
 
 ### POST campus
-POST http://localhost:3000/campus
+POST https://nestportal.onrender.com/campus
 Content-Type: application/json
 
 {
+    "id":1,
     "name": "qwerty",
     "address": "qwerty address"
 }
