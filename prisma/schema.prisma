@@ -69,6 +69,15 @@ model Program {
   StudentAcademicBackground StudentAcademicBackground[]
 }
 
+model Qualification {
+  id         Int      @id @default(autoincrement())
+  employee   Employee @relation(fields: [employee_id], references: [id])
+  employee_id Int
+  title      String
+  institution String
+  year       Int
+}
+
 model Employee {
   id              Int         @id @default(autoincrement())
   campus          Campus      @relation(fields: [campus_id], references: [id])
@@ -80,7 +89,7 @@ model Employee {
   first_name      String
   middle_name     String?
   last_name       String
-  qualifications  Json?
+  qualifications  Qualification[]
   gender          String
   address         String
   birth_date      DateTime
