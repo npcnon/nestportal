@@ -11,18 +11,22 @@ import { ProgramModule } from './program/program.module';
 import { ProgramTaskService } from './program/tasks/program.task.service';
 import { ProgramService } from './program/service/program.service';
 import { AppController } from './app.controller';
+import { StudentBasicInfoModule } from './student-basic-info/program.module';
+import { StudentBasicInfoService } from './student-basic-info/service/student-basic-info.service';
 
 @Module({
   imports: [
     CampusModule,
     DepartmentModule,
     ProgramModule,
+    StudentBasicInfoModule,
 
 
     ScheduleModule.forRoot()
   ],
 
   controllers: [AppController],
+
   providers: [
     CampusTaskService,
     CampusService,
@@ -30,7 +34,7 @@ import { AppController } from './app.controller';
     DepartmentService,
     ProgramTaskService,
     ProgramService,
-
+    StudentBasicInfoService,
 
     PrismaService
   ],

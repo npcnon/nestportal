@@ -139,7 +139,7 @@ model StudentBasicInfo {
   last_name              String
   suffix                 String?
   is_transferee          Boolean
-  year_level             String
+  year_level             String 
   contact_number         String
   address                String
   campus                 Campus   @relation(fields: [campus_id], references: [id])

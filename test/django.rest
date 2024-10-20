@@ -1,0 +1,173 @@
+
+
+# #GET basic student
+# basic student same as before
+# as usual we can use ?filter=fieldname=fieldvalue
+# for example: http://127.0.0.1:8000/api/stdntbasicinfo/?filter=first_name=Lucy
+# can also use ?latest=true to get the most latest data http://127.0.0.1:8000/api/stdntbasicinfo/?latest=true
+# can nest ?latest=true to filter to get the latest data that is filtered http://127.0.0.1:8000/api/stdntbasicinfo/?latest=true&filter=first_name=Lucy
+GET http://127.0.0.1:8000/api/stdntbasicinfo/
+
+### GET Full student
+## can use filter but in a more comprehensive way
+
+#####Example1 filter: using 1 filter argument which is `id` 
+## you can use `?filter=id=1` to get all the rows and 
+## models inside `Full Student Data` that have a field that is `id` and is equal to `1`
+
+##### example2 filer: using model as a filter argument to get all the data on that model
+## you can use `?filter=personal_data` to get all the data in `personal_data` model
+
+
+#####example3 filter: using 2 filter argument which is the `model` and the `id`
+## you can use `?filter=personal_data=f_name=Jane` with this you can get all the data in personal_data with the
+## first name `Jane`
+
+GET http://127.0.0.1:8000/api/full-student-data/?filter=persona_data
+
+### GET campus to get all the students detail on that campus use ?filter=campus=1
+### to get the students data(personaldata, family background, acadmemic background etc)
+### choices are personal_data, add_personal_data, family_background, academic_background, academic_history
+### use ?filter=campus=personal_data=1 to get all personaldata at campus 1
+GET http://127.0.0.1:8000/api/full-student-data/?filter=campus=personal_data=1
+
+
+
+
+### POST basic student
+GET http://localhost:3000/stdntbasicinfo/
+Content-Type: application/json
+
+{
+    "first_name": "wisadel",
+    "middle_name": "",
+    "last_name": "Ark",
+    "is_transferee": true,
+    "contact_number": "09111111111",
+    "year_level": "2nd Year",
+    "address": "Somewhere around the earth",
+    "campus_id": 1,
+    "program_id": 1,
+    "birth_date": "2000-01-01",
+    "sex": "Male",
+    "email": "shinygluttontuna@gmail.com"
+}
+
+### POST Full student
+POST http://127.0.0.1:8000/api/full-student-data/
+Content-Type: application/json
+
+{
+    "personal_data": {
+        "basicdata_applicant_id": 11,
+        "f_name": "zzzz",
+        "m_name": "Esco",
+        "suffix": "Bar",
+        "l_name": "Smith",
+        "sex": "Male",
+        "birth_date": "2000-01-01",
+        "birth_place": "New York",
+        "marital_status": "Single",
+        "religion": "Christian",
+        "country": "USA",
+        "email": "john.smith@example.com",
+        "acr": "123456",
+        "status": "officially enrolled"
+    },
+    "add_personal_data": {
+        "city_address": "123 Main St",
+        "province_address": "NY",
+        "contact_number": "1234567890",
+        "city_contact_number": "0987654321",
+        "province_contact_number": "1122334455",
+        "citizenship": "American"
+    },
+    "family_background": {
+        "father_fname": "Robert",
+        "father_mname": "Michael",
+        "father_lname": "Smith",
+        "father_contact_number": "1234567890",
+        "father_email": "robert.smith@example.com",
+        "father_occupation": "Engineer",
+        "father_income": 80000,
+        "father_company": "ABC Corp",
+        "mother_fname": "Mary",
+        "mother_mname": "Ann",
+        "mother_lname": "Smith",
+        "mother_contact_number": "0987654321",
+        "mother_email": "mary.smith@example.com",
+        "mother_occupation": "Doctor",
+        "mother_income": 95000,
+        "mother_company": "XYZ Clinic",
+        "guardian_fname": "Alice",
+        "guardian_mname": "B.",
+        "guardian_lname": "Johnson",
+        "guardian_relation": "Aunt",
+        "guardian_contact_number": "4567891230",
+        "guardian_email": "alice.johnson@example.com"
+    },
+    "academic_background": {
+        "program": 1,
+        "major_in": "Computer Science",
+        "student_type": "Full-time",
+        "semester_entry": 1,
+        "year_level":"1st Year",
+        "year_entry": 2023,
+        "year_graduate": 2027,
+        "application_type": "New"
+    },
+    "academic_history": {
+        "elementary_address": "Elementary St, City",
+        "elementary_honors": "Valedictorian",
+        "elementary_graduate": 2012,
+        "junior_highschool": "XYZ Junior High",
+        "junior_address": "Junior High St, City",
+        "junior_honors": "Honors",
+        "junior_graduate": 2015,
+        "senior_highschool": "LMN Senior High",
+        "senior_address": "Senior High St, City",
+        "senior_honors": "Graduated with Honors",
+        "senior_graduate": 2018,
+        "ncae_grade": "95",
+        "ncae_year_taken": 2018,
+        "latest_college": "Best College",
+        "college_address": "College St, City",
+        "college_honors": "Cum Laude",
+        "program": "Bachelor of Science in Information Technology"
+    }
+}
+
+### POST additional personal data student
+POST http://127.0.0.1:8000/api/add-personal-data/
+Content-Type: application/json
+
+{
+    "fulldata_applicant_id": 2,
+    "city_address": "123 Main St",
+    "province_address": "Nz",
+    "contact_number": "qwe",
+    "city_contact_number": "0987654321",
+    "province_contact_number": "1122334455",
+    "citizenship": "American"
+}
+### POST Official student
+POST http://127.0.0.1:8000/api/official-student-data/
+Content-Type: application/json
+
+{
+    "student_id": "2024-00004",
+    "campus": 1,
+    "password": "default pass or can be blank",
+    "fulldata_applicant_id": 7
+}
+
+
+### PUT personal data(for editing student status)
+# choices are pending, initially enrolled, rejected, officially enrolled
+
+PUT http://127.0.0.1:8000/api/deactivate_or_modify_personal-student-data/1/False
+Content-Type: application/json
+
+{
+    "status": "pending"
+}

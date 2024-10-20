@@ -8,7 +8,7 @@ import { CreateCampusDto } from 'src/campus/dto/campus.dto';
 export class CampusTaskService {
   constructor(private readonly campusService: CampusService) {} // Inject CampusService
 
-  @Cron('0 0 */12 * *') // Runs every 12 hours
+  @Cron('0 0 */12 * *') 
     async handleCron() {
     console.log('Task run at:', new Date().toISOString());
     try {
@@ -22,20 +22,16 @@ export class CampusTaskService {
         is_active: campus.isActive,
         }));
 
-        // Create or update campuses in the database
         for (const campusDto of campuses) {
             try {
-                // Check if the campus already exists
                 const existingCampus = await this.campusService.findOne(campusDto.id);
                 if (existingCampus) {
-                // If it exists, update the campus
                 await this.campusService.update(campusDto.id, {
                     name: campusDto.name,
                     address: campusDto.address,
                     is_active: campusDto.is_active,
                 });
                 } else {
-                // If it doesn't exist, create a new campus
                 await this.campusService.create(campusDto);
                 }
             } catch (error) {

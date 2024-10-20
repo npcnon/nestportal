@@ -13,7 +13,7 @@ async create(data: CreateDepartmentDto): Promise<Department> {
         data: {
             id: data.id,
             name: data.name,
-            campus: { connect: { id: data.campus_id } }, // Use campus_id to connect to the campus
+            campus: { connect: { id: data.campus_id } }, 
             code: data.code,
             is_active: data.is_active,
         },
