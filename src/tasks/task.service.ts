@@ -7,5 +7,5 @@ export class TaskService {
   @Cron('0 * * * * *') // Runs every minute
   async handleCron() {
     console.log('Task run at:', new Date().toISOString());
-
+  }
 }
