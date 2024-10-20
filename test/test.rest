@@ -1,4 +1,10 @@
 
+
+# get programs
+
+GET https://node-mysql-signup-verification-api.onrender.com/external/get-programs-active
+
+
 #GET
 GET http://localhost:3000/department/
 
@@ -11,3 +17,5 @@ Content-Type: application/json
     "name": "qwerty",
     "address": "qwerty address"
 }
+
+

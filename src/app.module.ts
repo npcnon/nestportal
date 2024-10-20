@@ -7,20 +7,31 @@ import { PrismaService } from './prisma/prisma.service';
 import { DepartmentTaskService } from './department/tasks/department.task.service';
 import { DepartmentService } from './department/service/department.service';
 import { DepartmentModule } from './department/department.module';
+import { ProgramModule } from './program/program.module';
+import { ProgramTaskService } from './program/tasks/program.task.service';
+import { ProgramService } from './program/service/program.service';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
     CampusModule,
     DepartmentModule,
-  
+    ProgramModule,
+
+
     ScheduleModule.forRoot()
   ],
+
+  controllers: [AppController],
   providers: [
     CampusTaskService,
     CampusService,
     DepartmentTaskService,
     DepartmentService,
-    
+    ProgramTaskService,
+    ProgramService,
+
+
     PrismaService
   ],
 })
